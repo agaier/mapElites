@@ -32,12 +32,14 @@ parse.addRequired('domain');
 parse.addOptional('startMap', []);
 parse.addOptional('genPerVis', 2^0);
 parse.addOptional('gifMap', false);
+parse.addOptional('genPerRecord', false);
 
 parse.parse(domain,varargin{:});
 d        = parse.Results.domain;
 startMap = parse.Results.startMap;
 visMod   = parse.Results.genPerVis;
 gifMap   = parse.Results.gifMap;
+recMod   = parse.Results.genPerRecord;
 
 %------------- BEGIN CODE --------------
 %% Fill initial map
@@ -53,15 +55,29 @@ end
 if gifMap;gif(gifMap);end
 
 %% MAP-Elites
-nEvals = d.nInitial; evalTime = 0; gen = 1;
+nEvals = d.nInitial; gen = 1;
 while (nEvals <= d.nEvals-d.batchSize)
     children = createChildren(map, d);
     [fitness, behavior, misc, children] = feval(d.evaluate, children, d);
     [map, improved] = addToMap(map, children, fitness, behavior, misc);  
     nEvals = nEvals + length(children)
     
-    % Visualization
+    % Visualization and Record Keeping
     gen = gen+1; 
-    if ~mod(gen, visMod); viewMap(map); if gifMap; gif; end; end    
+    if ~mod(gen, visMod); viewMap(map); if gifMap; gif; end; end  
+    if ~mod(gen, recMod)
+        record.evals(gen) = nEvals;
+        record.map(gen) = map; 
+        record.improved(gen) = improved; 
+        recorded(gen) = true; %#ok<AGROW>
+    end
 end
+
+%% Clean up data struct
+if recMod
+    record.evals = record.evals(recorded);
+    record.map = record.map(recorded);
+    record.improved = record.improved(recorded);
+end
+
 %------------- END OF CODE --------------
