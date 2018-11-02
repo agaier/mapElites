@@ -34,11 +34,9 @@ rmpath( genpath('domains')); addpath(genpath(['domains/' d.name '/']));
 % Functions
 d.evaluate = 'rastrigin_Evaluate';
 d.objFun   = 'rastrigin_FitnessFunc' ;
+d.getBc    = 'rastrigin_GetBehavior';
 d.breedPop = 'rastrigin_Variation';
 d.randInd  = 'rastrigin_RandInd';
-d.getBc    = 'rastrigin_GetBehavior';
-d.stop     = 'rastrigin_StopCriteria';
-d.indVis   = 'rastrigin_IndVis';
 
 % MAP-Elites settings
 d.nInitial   = 2^6;
