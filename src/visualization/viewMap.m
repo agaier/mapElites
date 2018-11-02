@@ -37,8 +37,8 @@ yOffset = [0.5 -0.0 0];
 imgHandle = imagesc(flipud(rot90(mapMat))); fitPlot = gca;
 set(imgHandle,'AlphaData',~isnan(imgHandle.CData)*1)
 xlabel([map.label{1} '\rightarrow']);
-ylab = ylabel([ map.label{2} '\uparrow']);
-set(ylab,'Rotation',0,'Position',get(ylab,'Position')-yOffset)
+ylab = ylabel([ map.label{2} '\rightarrow']);
+%set(ylab,'Rotation',0,'Position',get(ylab,'Position')-yOffset)
 
 
 set(fitPlot,...
@@ -58,9 +58,9 @@ hcb.FontSize = 12;
 
 % Output handles to graphics objects
 drawnow; 
-h(1) = fitPlot;
-h(2) = imgHandle;
-h(3) = hcb;
+handle(1) = fitPlot;
+handle(2) = imgHandle;
+handle(3) = hcb;
 
 
 %------------- END OF CODE --------------
