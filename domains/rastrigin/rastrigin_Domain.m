@@ -34,7 +34,7 @@ rmpath( genpath('domains')); addpath(genpath(['domains/' d.name '/']));
 % Functions
 d.evaluate = 'rastrigin_Evaluate';
 d.objFun   = 'rastrigin_FitnessFunc' ;
-d.newChild = 'rastrigin_CreateChild';
+d.breedPop = 'rastrigin_Variation';
 d.randInd  = 'rastrigin_RandInd';
 d.getBc    = 'rastrigin_GetBehavior';
 d.stop     = 'rastrigin_StopCriteria';
@@ -42,7 +42,7 @@ d.indVis   = 'rastrigin_IndVis';
 
 % MAP-Elites settings
 d.nInitial   = 2^6;
-d.batchSize  = 2^7;
+d.batchSize  = 2^6;
 d.nEvals     = 2^10;
 
 d.mapDims.res  = [8 10];
@@ -56,7 +56,8 @@ d.sampleInd.genome = nan(2,1);
 
 % Recombination parameters
 d.recombine.range       = [-2 2];
-d.recombine.mutSigma    = 0.2;    
+d.recombine.mutSigma    = [1/8; 1/10];   
+d.recombine.parents     = 1;
 
 
 %------------- END OF CODE --------------

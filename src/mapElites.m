@@ -35,7 +35,7 @@ parse.addOptional('gifMap', false);
 
 parse.parse(domain,varargin{:});
 d        = parse.Results.domain;
-startMap = parse.Results.map;
+startMap = parse.Results.startMap;
 visMod   = parse.Results.genPerVis;
 gifMap   = parse.Results.gifMap;
 
@@ -51,41 +51,49 @@ else
 end
 
 %% MAP-Elites
-evalTime = 0; iGen = 1;
-while (iGen <= p.nGens)
-    %% 1) Create and Evaluate Children
-    % Create children which satisfy geometric constraints for validity
-    nMissing = p.nChildren; children = [];
-    
-    while nMissing > 0
-        indPool = createChildren(map, nMissing, p, d);
-        validFunction = @(genomes) feval(d.validate, genomes, d);
-        [validChildren,~,nMissing] = getValidInds(indPool, validFunction, nMissing);
-        children = [children; validChildren]; %#ok<AGROW>
-    end   
-    
-    evalStart = tic;
-    [fitness, values] = fitnessFunction(children); %% TODO: Speed up without anonymous functions
-    evalTime = evalTime + toc(evalStart);    
-
-    %% 2) Add Children to Map   
-    [replaced, replacement] = nicheCompete(children,fitness,map,d);  
-    map = updateMap(replaced,replacement,map,fitness,children,...
-                        values,d.extraMapValues);  
-         
-    % Improvement Stats
-    percImproved(iGen) = length(replaced)./p.nChildren; %#ok<AGROW>
-
-    % View Illuminatiom Progress?
-    if p.display.illu && ~mod(iGen,p.display.illuMod)
-        set(h(2),'CData',flip(map.fitness),'AlphaData',~isnan(flip(map.fitness)))
-        colormap(h(1),parula(16)); drawnow;
-    end
-    
-iGen = iGen+1; if ~mod(iGen,2^5);disp([char(9) 'Illumination Generation: ' int2str(iGen) ' - Improved: ' num2str(percImproved(end)*100) '%']);end;
+nEvals = d.nInitial; evalTime = 0;
+while (nEvals < d.nEvals)
+    children = createChildren(map, d);
+    [fitness, behavior, misc, children] = feval(d.evaluate, children, d);
+    [map, improved] = addToMap(map, children, fitness, behavior, misc);  
+    nEvals = nEvals + length(children)
 end
-
-if percImproved(end) > 0.05; disp('Warning: MAP-Elites finished while still making improvements ( >5% / generation )');end
+    
+%     %% 1) Create and Evaluate Children
+%     
+%     
+%     % Create children which satisfy geometric constraints for validity
+%     nMissing = p.nChildren; children = [];
+%     
+%     while nMissing > 0
+%         indPool = createChildren(map, nMissing, p, d);
+%         validFunction = @(genomes) feval(d.validate, genomes, d);
+%         [validChildren,~,nMissing] = getValidInds(indPool, validFunction, nMissing);
+%         children = [children; validChildren]; %#ok<AGROW>
+%     end   
+%     
+%     evalStart = tic;
+%     [fitness, values] = fitnessFunction(children); %% TODO: Speed up without anonymous functions
+%     evalTime = evalTime + toc(evalStart);    
+% 
+%     %% 2) Add Children to Map   
+%     [replaced, replacement] = nicheCompete(children,fitness,map,d);  
+%     map = updateMap(replaced,replacement,map,fitness,children,...
+%                         values,d.extraMapValues);  
+%          
+%     % Improvement Stats
+%     percImproved(iGen) = length(replaced)./p.nChildren; %#ok<AGROW>
+% 
+%     % View Illuminatiom Progress?
+%     if p.display.illu && ~mod(iGen,p.display.illuMod)
+%         set(h(2),'CData',flip(map.fitness),'AlphaData',~isnan(flip(map.fitness)))
+%         colormap(h(1),parula(16)); drawnow;
+%     end
+%     
+% iGen = iGen+1; if ~mod(iGen,2^5);disp([char(9) 'Illumination Generation: ' int2str(iGen) ' - Improved: ' num2str(percImproved(end)*100) '%']);end;
+% end
+% 
+% if percImproved(end) > 0.05; disp('Warning: MAP-Elites finished while still making improvements ( >5% / generation )');end
 
 
 %------------- END OF CODE --------------

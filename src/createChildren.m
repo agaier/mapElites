@@ -1,4 +1,4 @@
-function children = createChildren(map, nChildren, p, d)
+function children = createChildren(map, d)
 %createChildren - produce new children through mutation of map elite
 %
 % Syntax:  children = createChildren(map,nChildren,p,d)
@@ -25,14 +25,12 @@ function children = createChildren(map, nChildren, p, d)
 
 %------------- BEGIN CODE --------------  
     % Remove empty bins from parent pool
-    parentPool = reshape(map.genes,[numel(map.fitness), d.dof]);
-    parentPool(isnan(parentPool(:,1)),:) = []; 
+    parentPool = map.genomes(:);
+    parentPool(any(isnan([parentPool.genome]))) = []; 
     
-    % Choose parents and create mutation
-    parents = parentPool(randi([1 size(parentPool,1)], [nChildren 1]), :);
-    mutation = randn(nChildren,d.dof) .* p.mutSigma;
+    % Uniform random selection of parents from parent pool
+    parents = parentPool(randi(length(parentPool),[d.batchSize d.recombine.parents]));
     
-    % Apply mutation
-    children = parents + mutation;
-    children(children>1) = 1; children(children<0) = 0;
+    % Create new population from parents
+    children = feval(d.breedPop, parents, d.recombine);
 %------------- END OF CODE --------------
