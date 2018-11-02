@@ -1,7 +1,8 @@
 function handle = viewMap(map, value)
 %viewMap - View results of 2D map
 %
-% Syntax:  viewMap(map, 'fitness')
+% Syntax:  viewMap(map)
+%          viewMap(map, 'otherValue')
 %
 % Inputs:
 %   map   - [struct] - map struct
@@ -21,26 +22,21 @@ function handle = viewMap(map, value)
 
 % TODO:
 % * Double check orientation is correct
-% * Complete todo list
 
 %------------- Input Parsing ------------
-if nargin < 2
-    value = 'fitness';
-end
+if nargin < 2; value = 'fitness'; end
 eval(['mapMat = map.' value ';']);
 
 %------------- BEGIN CODE --------------
 mapRes = size(mapMat);
 edges = map.edges;
 
-yOffset = [0.5 -0.0 0];
-imgHandle = imagesc(flipud(rot90(mapMat))); fitPlot = gca;
-set(imgHandle,'AlphaData',~isnan(imgHandle.CData)*1)
-xlabel([map.label{1} '\rightarrow']);
-ylab = ylabel([ map.label{2} '\rightarrow']);
-%set(ylab,'Rotation',0,'Position',get(ylab,'Position')-yOffset)
+% Plot Map values
+imgHandle = imagesc(flipud(rot90(mapMat))); % Top corner = [0,0] in imagesc
+set(imgHandle,'AlphaData',~isnan(imgHandle.CData)*1) % Don't show nans
 
-
+% Set labels on bin borders instead of centers
+fitPlot = gca;
 set(fitPlot,...
     'XTick', linspace(0.5,mapRes(1)+0.5,mapRes(1)+1), ...
     'YTick', linspace(0.5,mapRes(2)+0.5,mapRes(2)+1),...
@@ -49,15 +45,21 @@ set(fitPlot,...
     'LineWidth',2 ...    
     );
 
+% Label Axis
+xlabel([map.label{1} '\rightarrow']);
+ylabel([map.label{2} '\rightarrow']);
 xticklabels(edges{1});
 yticklabels(edges{2}(end:-1:1));
 
+% Set Color Bar
 hcb = colorbar;
 set(get(hcb,'Title'),'String',capitalize(value))
 hcb.FontSize = 12;
 
-% Output handles to graphics objects
+
 drawnow; 
+
+% Output handles to graphics objects
 handle(1) = fitPlot;
 handle(2) = imgHandle;
 handle(3) = hcb;
