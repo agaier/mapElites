@@ -13,7 +13,7 @@
 
 
 %% Load problem domain
-clear
+clear; figure(1); clf
 d = rastrigin_Domain;
 
 % Run MAP-Elites with default parameters
@@ -25,12 +25,12 @@ map = mapElites(d, 'startMap',map);
 %% Increase resolution and number of children
 d.mapDims.res = [20 25];% Set resolution of map
 d.nEvals      = 2^13;   % Set evaluation budget
-d.initial     = 2^7;    % Set number of initial random samples
+d.nInitial    = 2^7;    % Set number of initial random samples
 d.batchSize   = 2^8;    % Set number of children to create at one time
 
 map = mapElites(d);
 
-%% Run at high res
+%% Run at higher res
 d.mapDims.res = [100 100];% Set resolution of map
 d.nEvals      = 2^16;     % Set evaluation budget
 d.initial     = 2^7;      % Set number of initial random samples
