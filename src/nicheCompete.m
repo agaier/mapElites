@@ -1,43 +1,49 @@
-function [replaced, replacement, mapLinIndx] = nicheCompete(newInds,fitness,map,d)
+function [replaced, replacement] = nicheCompete(map, newInd ,fitness,behavior)
 %nicheCompete - results of competition with map's existing elites
 %
 % Syntax:  [replaced, replacement] = nicheCompete(newInds,fitness,map,p)
 %
 % Inputs:
-%   newInds - [NXM]     - New population to compete for niches
-%   fitness - [NX1]     - Fitness values fo new population
-%   map     - struct    - Population archive
-%   d       - struct    - Domain definition
+%    map      - [struct] - current map of individuals and performance
+%    newInd   - [M X N ] - N candidate individuals
+%    fitness  - [1 X N ] - fitness of newInd
+%    behavior - [B X N ] - behavior coordinates of newInd
 %
 % Outputs:
 %   replaced    - [NX1] - Linear index of map cells to recieve replacements
 %   replacement - [NX1] - Index of newInds to replace current elites in niche
 %   mapLinIndx  - [NX1] - Index of current elites (for rank testing only)
 %
-% Example:
-%
-% Other m-files required: getBestPerCell.m
-%
-% See also: createMap, getBestPerCell, updateMap
 
 % Author: Adam Gaier
-% Bonn-Rhein-Sieg University of Applied Sciences (HBRS)
-% email: adam.gaier@h-brs.de
-% Jun 2016; Last revision: 02-Aug-2017
+% Bonn-Rhein-Sieg University of Applied Sciences (BRSU)
+% Inria Nancy - Grand Est
+% email: adam.gaier@{h-brs.de, inria.fr}
+% Nov 2018; Last revision: 02-Nov-2018
+
+% TODO:
+% * With N dimensions (see todo note below)
 
 %------------- BEGIN CODE --------------
-[bestIndex, bestBin] = getBestPerCell(newInds,fitness,d, map.edges);
-mapLinIndx = sub2ind(d.featureRes,bestBin(:,1),bestBin(:,2));
+% Get bin of each individual based on behavior
+nDims = size(behavior,1);
+for iDim = 1:nDims
+    bin(iDim,:) = discretize(behavior(iDim,:),map.edges{iDim}); %#ok<AGROW>
+end
 
-% Nan features?
-% A 'nan' genome sneaks in -- apparently after precise evaluation
-if any(isnan(mapLinIndx));   save('nanFeatureError'); end
-
+% Get best in each bin
+% * First sort by bin then fitness (best fitness first). 
+% * Then remove all but the first (highest fitness) for each bins combo
+[sortedByFeatureAndFitness, indxSortOne] = sortrows([bin; fitness]');
+[~, indxSortTwo] = unique(sortedByFeatureAndFitness(:,[1 2]),'rows');
+bestIndex  = indxSortOne(indxSortTwo);
+bestBin    = bin(:,bestIndex);
+mapLinIndx = sub2ind(size(map.fitness),bestBin(1,:),bestBin(2,:)); % <-- TODO: Higher dimensions!
 
 % Compare to already existing samples
 improvement  = ~(fitness (bestIndex) >= map.fitness(mapLinIndx)); % comparisons to NaN are always false
-improvement(isnan(fitness(bestIndex))) = false;
-replacement = bestIndex (improvement);
+improvement(isnan(fitness(bestIndex))) = false;                   % but nans are not better than nans
+replacement = bestIndex (improvement)';
 replaced    = mapLinIndx(improvement);
 
 %------------- END OF CODE --------------

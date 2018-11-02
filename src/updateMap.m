@@ -1,5 +1,4 @@
-function map = updateMap(replaced,replacement,map,...
-                            fitness,genes,values,extraMapValues) %#ok<INUSL>
+function map = updateMap(replaced,replacement,map, newInd, fitness, misc)  %#ok<INUSD>
 %updateMap - Replaces all values in a set of map cells
 %
 % Syntax:  map = updateMap(replaced,replacement,map,fitness,drag,lift,children)
@@ -9,7 +8,7 @@ function map = updateMap(replaced,replacement,map,...
 %   replacement - [1XM]  - linear index of children values to place in map
 %   map         - struct - population archive
 %   fitness     - [1XN]  - Child fitness
-%   genes       - [NXD]  - Child genomes
+%   genomes       - [NXD]  - Child genomes
 %   values      - [1XN]  - extra values of interest, e.g. 'cD'
 %
 % Outputs:
@@ -25,22 +24,13 @@ function map = updateMap(replaced,replacement,map,...
 
 %------------- BEGIN CODE --------------
 
-% Assign Fitness
-map.fitness (replaced) = fitness (replacement);
+% Replace individuals and fitness
+map.fitness(replaced) = fitness(replacement);
+map.genomes(replaced)  = newInd(replacement);
 
-% Assign Genomes
-[r,c] = size(map.fitness);
-[replacedI,replacedJ] = ind2sub([r c], replaced);
-for iReplace = 1:length(replaced)
-    map.genes(replacedI(iReplace),replacedJ(iReplace),:) = ...
-        genes(replacement(iReplace),:) ;    
-end
-
-% Assign Miscellaneous Map values
-if ~isempty(extraMapValues)
-    for iValues = 1:length(extraMapValues)
-        eval(['map.' extraMapValues{iValues} '(replaced) = values{' int2str(iValues) '}(replacement);']);
-    end
+% Replace Miscellaneous Map values
+for iValues = 1:length(map.misc)
+    eval( ['map.' map.misc{(iValues)} '(replaced) = misc{' int2str(iValues) '}(replacement);'] )
 end
 
 %------------- END OF CODE --------------
