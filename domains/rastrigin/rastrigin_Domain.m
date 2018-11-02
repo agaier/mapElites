@@ -3,19 +3,6 @@ function d = rastrigin_Domain
 %
 %
 % Syntax:  d = rastrigin_Domain
-%
-% Inputs:
-%
-% Outputs:
-%    output1 - Description
-%    output2 - Description
-%
-%
-% Other m-files required: none
-% Subfunctions: none
-% MAT-files required: none
-%
-% See also: OTHER_FUNCTION_NAME1,  OTHER_FUNCTION_NAME2
 
 % Author: Adam Gaier
 % Bonn-Rhein-Sieg University of Applied Sciences (BRSU)

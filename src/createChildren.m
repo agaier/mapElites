@@ -4,24 +4,22 @@ function children = createChildren(map, d)
 % Syntax:  children = createChildren(map,nChildren,p,d)
 %
 % Inputs:
-%   map         - Population struct
-%    .fitness
-%    .genes
-%   nChildren - number of children to create
-%   p           - SAIL hyperparameter struct
-%    .mutSigma      - sigma of gaussian mutation applied to children
-%   d           - Domain description struct
-%    .dof           - Degrees of freedom (genome length)
+%    map - [struct] - map of individuals and performance
+%      .genomes   - [struct] - genotypes of all individuals
+%
+%    d   - [struct] - recombination/variation parameters
+%      .batchSize - [int   ] - number of children to create
+%      .recombine - [struct] - recombination parameters of domain
 %
 % Outputs:
-%   children - [nChildren X genomeLength] - new solutions
-%
+%   children  - [1 X N ] - newly created solutions
 %
 
 % Author: Adam Gaier
-% Bonn-Rhein-Sieg University of Applied Sciences (HBRS)
-% email: adam.gaier@h-brs.de
-% Jun 2016; Last revision: 17-Oct-2017
+% Bonn-Rhein-Sieg University of Applied Sciences (BRSU)
+% Inria Nancy - Grand Est
+% email: adam.gaier@{h-brs.de, inria.fr}
+% Nov 2018; Last revision: 02-Nov-2018
 
 %------------- BEGIN CODE --------------  
     % Remove empty bins from parent pool

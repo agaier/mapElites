@@ -7,10 +7,6 @@
 % email: adam.gaier@{h-brs.de, inria.fr}
 % Nov 2018; Last revision: 02-Nov-2018
 
-% TODO:
-% * Write todo list
-% * Complete todo list
-
 
 %% Load problem domain
 clear; figure(1); clf

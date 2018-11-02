@@ -21,13 +21,9 @@ function [map, improved] = addToMap(map, newInd, fitness, behavior, misc)
 % email: adam.gaier@{h-brs.de, inria.fr}
 % Nov 2018; Last revision: 02-Nov-2018
 
-% TODO:
-% * Write todo list
-% * Complete todo list
-
 %------------- BEGIN CODE --------------
 
-[replaced, replacement] = nicheCompete(map, newInd, fitness, behavior);
+[replaced, replacement] = nicheCompete(map, fitness, behavior);
 map = updateMap(replaced, replacement, map, newInd, fitness, misc);
 
 improved = length(replaced)./length(newInd);

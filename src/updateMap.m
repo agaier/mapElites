@@ -4,23 +4,22 @@ function map = updateMap(replaced,replacement,map, newInd, fitness, misc)  %#ok<
 % Syntax:  map = updateMap(replaced,replacement,map,fitness,drag,lift,children)
 %
 % Inputs:
-%   replaced    - [1XM]  - linear index of map cells to be replaced
-%   replacement - [1XM]  - linear index of children values to place in map
-%   map         - struct - population archive
-%   fitness     - [1XN]  - Child fitness
-%   genomes       - [NXD]  - Child genomes
-%   values      - [1XN]  - extra values of interest, e.g. 'cD'
+%   replaced    - [1 X M ]  - linear index of map cells to be replaced
+%   replacement - [1 X M ]  - linear index of children values to place in map
+%   map         - [struct]  - population archive
+%   fitness     - [1 X N ]  - fitness values of new individuals
+%   genomes     - [1 X N ]  - genes of new individuals
+%   misc        - [cell  ]  - extra values of interest to record
 %
 % Outputs:
 %   map         - struct - population archive
 %
-%
-% See also: createMap, nicheCompete
 
 % Author: Adam Gaier
-% Bonn-Rhein-Sieg University of Applied Sciences (HBRS)
-% email: adam.gaier@h-brs.de
-% Jun 2016; Last revision: 02-Aug-2017
+% Bonn-Rhein-Sieg University of Applied Sciences (BRSU)
+% Inria Nancy - Grand Est
+% email: adam.gaier@{h-brs.de, inria.fr}
+% Nov 2018; Last revision: 02-Nov-2018
 
 %------------- BEGIN CODE --------------
 

@@ -12,8 +12,6 @@ function [map,record] = mapElites(domain, varargin)
 % Outputs:
 %   map        - [struct] - population archive created at end of run
 %   record     - [struct] - 
-
-%
 %
 
 % Author: Adam Gaier

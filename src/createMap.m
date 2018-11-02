@@ -26,10 +26,6 @@ function map = createMap(mapDims, sampleInd)
 % email: adam.gaier@{h-brs.de, inria.fr}
 % Nov 2018; Last revision: 02-Nov-2018
 
-% TODO:
-% * Write todo list
-% * Complete todo list
-
 %------------- BEGIN CODE --------------
 
 for i=1:length(mapDims.res)

@@ -1,11 +1,10 @@
-function [replaced, replacement] = nicheCompete(map, newInd ,fitness,behavior)
+function [replaced, replacement] = nicheCompete(map, fitness, behavior)
 %nicheCompete - results of competition with map's existing elites
 %
 % Syntax:  [replaced, replacement] = nicheCompete(newInds,fitness,map,p)
 %
 % Inputs:
 %    map      - [struct] - current map of individuals and performance
-%    newInd   - [M X N ] - N candidate individuals
 %    fitness  - [1 X N ] - fitness of newInd
 %    behavior - [B X N ] - behavior coordinates of newInd
 %
