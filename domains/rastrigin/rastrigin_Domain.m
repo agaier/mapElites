@@ -46,8 +46,9 @@ d.batchSize  = 2^6;
 d.nEvals     = 2^10;
 
 d.mapDims.res  = [8 10];
+d.mapDims.label= {'x-coord','y-coord'};
 d.mapDims.min  = [-2 -1];
-d.mapDims.max  = [ 2  1];
+d.mapDims.max  = [ 2  2];
 d.mapDims.misc = {'otherVal1', 'otherVal2'}; 
 
 % Genome

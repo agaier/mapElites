@@ -4,15 +4,15 @@ function [map,record] = mapElites(domain, varargin)
 % Syntax:  map = mapElites(problemDomain, hyperparameters, map);
 %
 % Inputs:
-%   fitnessFunction - [funct ] - returns fitness of vector of individuals
-%   map             - [struct] - initial solutions in F-dimensional map
-%   p               - [struct] - Hyperparameters for algorithm, visualization, and data gathering
-%   d               - [struct] - Domain definition
+%   domain     - [struct] - Domain definition
+%   startMap   - [struct] - (Optional) previous map to start with
+%   genPerVis  - [int   ] - (Optional) gens per visualization (-1 for off)
+%   gifMap     - [file  ] - (Optional) filename to record gif of progress
 %
 % Outputs:
-%   map    - struct - population archive
-%   percImproved    - percentage of children which improved on elites
-%   h      - [1X2]  - axes handle, data handle
+%   map        - [struct] - population archive created at end of run
+%   record     - [struct] - 
+
 %
 %
 
@@ -30,7 +30,7 @@ function [map,record] = mapElites(domain, varargin)
 parse = inputParser;
 parse.addRequired('domain');
 parse.addOptional('startMap', []);
-parse.addOptional('genPerVis', 2^3);
+parse.addOptional('genPerVis', 2^0);
 parse.addOptional('gifMap', false);
 
 parse.parse(domain,varargin{:});
@@ -50,50 +50,18 @@ else
     map = addToMap(map, startPop, fitness, behavior, misc);    
 end
 
+if gifMap;gif(gifMap);end
+
 %% MAP-Elites
-nEvals = d.nInitial; evalTime = 0;
-while (nEvals < d.nEvals)
+nEvals = d.nInitial; evalTime = 0; gen = 1;
+while (nEvals <= d.nEvals-d.batchSize)
     children = createChildren(map, d);
     [fitness, behavior, misc, children] = feval(d.evaluate, children, d);
     [map, improved] = addToMap(map, children, fitness, behavior, misc);  
     nEvals = nEvals + length(children)
-end
     
-%     %% 1) Create and Evaluate Children
-%     
-%     
-%     % Create children which satisfy geometric constraints for validity
-%     nMissing = p.nChildren; children = [];
-%     
-%     while nMissing > 0
-%         indPool = createChildren(map, nMissing, p, d);
-%         validFunction = @(genomes) feval(d.validate, genomes, d);
-%         [validChildren,~,nMissing] = getValidInds(indPool, validFunction, nMissing);
-%         children = [children; validChildren]; %#ok<AGROW>
-%     end   
-%     
-%     evalStart = tic;
-%     [fitness, values] = fitnessFunction(children); %% TODO: Speed up without anonymous functions
-%     evalTime = evalTime + toc(evalStart);    
-% 
-%     %% 2) Add Children to Map   
-%     [replaced, replacement] = nicheCompete(children,fitness,map,d);  
-%     map = updateMap(replaced,replacement,map,fitness,children,...
-%                         values,d.extraMapValues);  
-%          
-%     % Improvement Stats
-%     percImproved(iGen) = length(replaced)./p.nChildren; %#ok<AGROW>
-% 
-%     % View Illuminatiom Progress?
-%     if p.display.illu && ~mod(iGen,p.display.illuMod)
-%         set(h(2),'CData',flip(map.fitness),'AlphaData',~isnan(flip(map.fitness)))
-%         colormap(h(1),parula(16)); drawnow;
-%     end
-%     
-% iGen = iGen+1; if ~mod(iGen,2^5);disp([char(9) 'Illumination Generation: ' int2str(iGen) ' - Improved: ' num2str(percImproved(end)*100) '%']);end;
-% end
-% 
-% if percImproved(end) > 0.05; disp('Warning: MAP-Elites finished while still making improvements ( >5% / generation )');end
-
-
+    % Visualization
+    gen = gen+1; 
+    if ~mod(gen, visMod); viewMap(map); if gifMap; gif; end; end    
+end
 %------------- END OF CODE --------------
