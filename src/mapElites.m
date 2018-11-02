@@ -22,10 +22,6 @@ function [map,record] = mapElites(domain, varargin)
 % email: adam.gaier@{h-brs.de, inria.fr}
 % Nov 2018; Last revision: 02-Nov-2018
 
-% TODO:
-% * Write todo list
-% * Complete todo list
-
 %------------- Input Parsing ------------
 parse = inputParser;
 parse.addRequired('domain');
@@ -57,12 +53,13 @@ if gifMap;gif(gifMap);end
 %% MAP-Elites
 nEvals = d.nInitial; gen = 1;
 while (nEvals <= d.nEvals-d.batchSize)
+    % Next three lines is the whole algorithm
     children = createChildren(map, d);
     [fitness, behavior, misc, children] = feval(d.evaluate, children, d);
     [map, improved] = addToMap(map, children, fitness, behavior, misc);  
-    nEvals = nEvals + length(children)
-    
+        
     % Visualization and Record Keeping
+    nEvals = nEvals + length(children) %#ok<NOPRT>
     gen = gen+1; 
     if ~mod(gen, visMod); viewMap(map); if gifMap; gif; end; end  
     if ~mod(gen, recMod)
