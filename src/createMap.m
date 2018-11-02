@@ -37,7 +37,7 @@ for i=1:length(mapDims.res)
     map.edges{i}(1)  = -Inf;
     map.edges{i}(end) = Inf;
 end
-
+map.label = mapDims.label;
 map.fitness = NaN(mapDims.res);
 map.genomes = repmat(sampleInd, [mapDims.res]);
 
