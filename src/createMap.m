@@ -1,48 +1,52 @@
-function [map, edges] = createMap(featureResolution, genomeLength, varargin)
-%createMap - Defines map struct and feature space cell divisions
+function map = createMap(mapDims, sampleInd)
+%createMap - Defines map struct and behavior space bin divisions
 %
-% Syntax:  [map, edges] = createMap(featureResolution, genomeLength)
+% Syntax:  map = createMap(mapDims, sampleInd)
 %
 % Inputs:
-%    featureResolution - [1XN] - Number of bins in N dimensions
-%    featureResolution - [1X1] - Length of genome
-%    featureResolution - cell  - Strings with name of additional value
+%    mapDims
+%      .res       - [ 1XN ] - number of bins in N dimensions
+%      .min       - [ 1XN ] - number of bins in N dimensions
+%      .max       - [ 1XN ] - number of bins in N dimensions
+%      .misc      - [cell ] - strings with names of additional values
+%    sampleInd    - [ 1X1 ] - example individual
 %
 % Outputs:
-%    map  - struct with [M(1) X M(2)...X M(N)] matrices for fitness, etc
-%       edges               - {1XN} cell of partitions for each dimension
-%       fitness, drag, etc  - [M(1) X M(2) X M(N)] matrices of scalars
-%       genes               - [M(1) X M(2) X M(N) X genomeLength]
-%
-% Example: 
-%   map = createMap([10 5], 3); % 10 X 5 map of genomes with 3 parameters
-%   OR
-%   extraMapValues = {'cD','cL'};
-%   map = createMap(d.featureRes, d.dof, extraMapValues)
-%
+%    map          - [struct] - Map/archive
+%      .edges       - {1  X N }            - map partitions per dim
+%      .fitness     - [M(1) X M(2) X M(N)] - fitness value in each bin
+%      .genomes     - [M(1) X M(2) X M(N)] - individual in each bin
+%      .otherVals   - [M(1) X M(2) X M(N)] - other value in each bin
+%      .otherVals   - [M(1) X M(2) X M(N)] - other value in each bin
 
 
 % Author: Adam Gaier
-% Bonn-Rhein-Sieg University of Applied Sciences (HBRS)
-% email: adam.gaier@h-brs.de
-% Jun 2016; Last revision: 27-Jan-2017
+% Bonn-Rhein-Sieg University of Applied Sciences (BRSU)
+% Inria Nancy - Grand Est
+% email: adam.gaier@{h-brs.de, inria.fr}
+% Nov 2018; Last revision: 02-Nov-2018
+
+% TODO:
+% * Write todo list
+% * Complete todo list
 
 %------------- BEGIN CODE --------------
 
-for i=1:length(featureResolution)
-    edges{i} = linspace(0,1,featureResolution(i)+1); %#ok<AGROW>
+for i=1:length(mapDims.res)
+    map.edges{i} = linspace(mapDims.min(i),mapDims.max(i),mapDims.res(i)+1);
+    map.edges{i}(1)  = -Inf;
+    map.edges{i}(end) = Inf;
 end
-map.edges = edges;
 
-blankMap     = NaN(featureResolution,'double');
-map.fitness  = blankMap;
-map.genes    = repmat(blankMap,[1 1 genomeLength]); %#ok<REPMAT>
+map.fitness = NaN(mapDims.res);
+map.genomes = repmat(sampleInd, [mapDims.res]);
 
-if ~isempty(varargin)
-    for iValues = 1:length(varargin{1})
-        eval(['map.' varargin{1}{iValues} ' = blankMap;']);
-    end
+% Include additional values of interest per bin
+map.misc = mapDims.misc;
+for iValues = 1:length(map.misc)
+    eval(['map.' map.misc{iValues} ' = NaN(mapDims.res);']);
 end
+
 
 
 
