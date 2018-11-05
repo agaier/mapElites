@@ -2,14 +2,14 @@ function behavior = rastrigin_GetBehavior(pop)
 %rastrigin_getFeatures - Returns features of 2D rastrigin benchmark
 % Features here are merely the x,y coordinates (e.g. the genome itself)
 %
-% Syntax:  fitness = rastrigin_GetFeatures(pop)
+% Syntax:  behavior = rastrigin_GetBehavior(pop)
 %
 % Inputs:
-%    pop     - [M X N] - N individuals of length M
+%    pop      - [M X N] - N individuals of length M
 %
 %
 % Outputs:
-%    fitness - [F X N] - features of each individual
+%    behavior - [B X N] - behavior characterization of each individual
 %
 
 %
