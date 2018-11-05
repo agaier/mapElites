@@ -24,7 +24,7 @@ function children = createChildren(map, d)
 %------------- BEGIN CODE --------------  
     % Remove empty bins from parent pool
     parentPool = map.genomes(:);
-    parentPool(any(isnan([parentPool.genome]))) = []; 
+    parentPool(isnan([map.fitness])) = [];
     
     % Uniform random selection of parents from parent pool
     parents = parentPool(randi(length(parentPool),[d.batchSize d.recombine.parents]));
