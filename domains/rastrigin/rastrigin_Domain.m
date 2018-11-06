@@ -1,7 +1,6 @@
 function d = rastrigin_Domain
 %rastrigin_Domain - Domain parameters solving demo 2d rastrigin
 %
-%
 % Syntax:  d = rastrigin_Domain
 
 % Author: Adam Gaier

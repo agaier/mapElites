@@ -74,7 +74,9 @@ if recMod
     record.improved = record.improved(recorded);
     %record.map = record.map(recorded);
 end
-map.view = @(x1,x2) feval(d.indVis,map,[x1,x2],d);
+
+% Include method for inspecting individuals in map
+if isfield(d,'indVis');map.view=@(x1,x2) feval(d.indVis,map,[x1,x2],d);end
 
 
 %------------- END OF CODE --------------

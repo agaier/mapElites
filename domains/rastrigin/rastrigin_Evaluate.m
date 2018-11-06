@@ -1,15 +1,17 @@
 function [fitness, behavior, miscVal, pop] = rastrigin_Evaluate(pop, d)
 %rastrigin_getQd - Gets the Quality and Diversity measures of a population
 %
-% Syntax:  [fitness, behavior] = rastrigin_getQd(startPop, d)
+% Syntax:  [fitness, behavior, miscVal, pop] = rastrigin_Evaluate(pop, d)
 %
 % Inputs:
-%    pop      - [M X N ] - N individuals of length M
+%    pop      - [1 X N ] - N individuals
 %    d        - [struct] - domain hyperparameter struct
 %
 % Outputs:
 %    fitness  - [1 X N ] - fitness of startPop
 %    behavior - [B X N ] - behavior coordinates of startPop
+%    misc     - [1 X N ] - miscellaneous values
+%    pop      - [1 X N ] - pop, possible with updated values
 %
 % Other m-files required: d.objFun, d.getBc
 
