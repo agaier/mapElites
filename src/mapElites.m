@@ -64,7 +64,7 @@ while (nEvals <= d.nEvals-d.batchSize)
         recorded(gen) = true; %#ok<AGROW>
         record.evals(gen) = nEvals;
         record.improved(gen) = improved; 
-        %record.map(gen) = map; % Beyond trivial runs often very large!
+        record.map(gen) = map; % Beyond trivial runs often very large!
     end
 end
 
@@ -72,7 +72,7 @@ end
 if recMod
     record.evals = record.evals(recorded);
     record.improved = record.improved(recorded);
-    %record.map = record.map(recorded);
+    record.map = record.map(recorded);
 end
 
 % Include method for inspecting individuals in map

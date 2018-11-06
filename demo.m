@@ -44,7 +44,7 @@ map = mapElites(d,'genPerVis',2^3,'gifMap','rastMap.gif');
 % web('rastMap.gif') % view gif in browser
 
 %% Save progress as data
-[~, record] = mapElites(d,'genPerVis',0,'genPerRecord',2^3);
+[map, record] = mapElites(d,'genPerVis',0,'genPerRecord',2^3);
 
 %% Display run details from record
 subplot(2,1,1)
