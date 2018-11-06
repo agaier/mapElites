@@ -18,7 +18,7 @@ function [map,record] = mapElites(domain, varargin)
 % Bonn-Rhein-Sieg University of Applied Sciences (BRSU)
 % Inria Nancy - Grand Est
 % email: adam.gaier@{h-brs.de, inria.fr}
-% Nov 2018; Last revision: 02-Nov-2018
+% Nov 2018; Last revision: 06-Nov-2018
 
 %------------- Input Parsing ------------
 parse = inputParser;
@@ -61,18 +61,20 @@ while (nEvals <= d.nEvals-d.batchSize)
     gen = gen+1; 
     if ~mod(gen, visMod); viewMap(map); if gifMap; gif; end; end  
     if ~mod(gen, recMod)
-        record.evals(gen) = nEvals;
-        record.map(gen) = map; 
-        record.improved(gen) = improved; 
         recorded(gen) = true; %#ok<AGROW>
+        record.evals(gen) = nEvals;
+        record.improved(gen) = improved; 
+        %record.map(gen) = map; % Beyond trivial runs often very large!
     end
 end
 
 %% Clean up data struct
 if recMod
     record.evals = record.evals(recorded);
-    record.map = record.map(recorded);
     record.improved = record.improved(recorded);
+    %record.map = record.map(recorded);
 end
+map.view = @(x1,x2) feval(d.indVis,map,[x1,x2],d);
+
 
 %------------- END OF CODE --------------
